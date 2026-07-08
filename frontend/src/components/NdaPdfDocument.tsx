@@ -65,6 +65,12 @@ const styles = StyleSheet.create({
     fontFamily: "Helvetica-Bold",
     marginBottom: 6,
   },
+  disclaimer: {
+    marginTop: 20,
+    fontSize: 8,
+    fontStyle: "italic",
+    color: "#64748b",
+  },
 });
 
 function PartyBlock({
@@ -150,6 +156,10 @@ export function NdaPdfDocument({ data }: { data: NdaData }) {
             />
           </View>
         </View>
+
+        <Text style={styles.disclaimer}>
+          This document is a draft and is subject to legal review.
+        </Text>
 
         <Text style={styles.footer} fixed>
           {ATTRIBUTION}

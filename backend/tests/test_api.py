@@ -22,12 +22,6 @@ def test_catalog_lists_templates():
     assert "mutual-nda" in ids
 
 
-def test_login_placeholder():
-    r = client.post("/api/auth/login", json={"email": "a@b.com", "password": "x"})
-    assert r.status_code == 200
-    assert r.json()["ok"] is True
-
-
 def test_init_db_creates_users_table(tmp_path):
     db = tmp_path / "test.db"
     init_db(db)

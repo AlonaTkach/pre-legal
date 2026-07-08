@@ -31,6 +31,63 @@ export async function fetchTemplate(id: string): Promise<TemplateDoc> {
   return res.json();
 }
 
+// --- Auth ---------------------------------------------------------------
+
+export type AuthResponse = { token: string; email: string };
+
+async function postAuth(path: string, email: string, password: string) {
+  const res = await fetch(`${API_BASE}${path}`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const body = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(body.detail ?? "Authentication failed");
+  return body as AuthResponse;
+}
+
+export const signup = (email: string, password: string) =>
+  postAuth("/api/auth/signup", email, password);
+export const login = (email: string, password: string) =>
+  postAuth("/api/auth/login", email, password);
+
+// --- Saved documents ----------------------------------------------------
+
+export type SavedDocument = {
+  id: number;
+  name: string;
+  document_type: string;
+  fields: Record<string, string>;
+  created_at: string;
+};
+
+function authHeaders(token: string) {
+  return { "Content-Type": "application/json", Authorization: `Bearer ${token}` };
+}
+
+export async function saveDocument(
+  token: string,
+  name: string,
+  documentType: string,
+  fields: Record<string, string>,
+): Promise<{ id: number }> {
+  const res = await fetch(`${API_BASE}/api/documents`, {
+    method: "POST",
+    headers: authHeaders(token),
+    body: JSON.stringify({ name, document_type: documentType, fields }),
+  });
+  if (!res.ok) throw new Error(`Save failed: ${res.status}`);
+  return res.json();
+}
+
+export async function listDocuments(token: string): Promise<SavedDocument[]> {
+  const res = await fetch(`${API_BASE}/api/documents`, {
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) throw new Error(`List failed: ${res.status}`);
+  return res.json();
+}
+
 // Map the mutual-NDA field keys the assistant returns onto the structured
 // NdaData used by the polished NDA renderer.
 export function ndaDataFromFields(f: Record<string, string>): NdaData {
