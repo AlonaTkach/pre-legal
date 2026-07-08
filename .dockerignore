@@ -1,0 +1,17 @@
+# Node
+**/node_modules
+frontend/.next
+frontend/out
+
+# Python
+**/.venv
+**/__pycache__
+**/*.db
+**/.pytest_cache
+
+# Git / misc
+.git
+.gitignore
+**/.DS_Store
+.claude
+.notes

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { DEFAULT_NDA, NdaData } from "@/lib/nda";
 import { NdaForm } from "@/components/NdaForm";
 import { NdaPreview } from "@/components/NdaPreview";
@@ -12,17 +13,25 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-slate-100">
       <header className="border-b border-slate-200 bg-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-1 px-6 py-5">
-          <p className="text-xs font-bold uppercase tracking-widest text-slate-400">
-            pre-legal
-          </p>
-          <h1 className="text-2xl font-bold text-slate-900">
-            Mutual NDA Creator
-          </h1>
-          <p className="text-sm text-slate-500">
-            Fill in the key details and download a completed Mutual
-            Non-Disclosure Agreement as a PDF.
-          </p>
+        <div className="mx-auto flex max-w-7xl items-start justify-between gap-4 px-6 py-5">
+          <div className="flex flex-col gap-1">
+            <p className="text-xs font-bold uppercase tracking-widest text-indigo-700">
+              pre-legal
+            </p>
+            <h1 className="text-2xl font-bold text-slate-900">
+              Mutual NDA Creator
+            </h1>
+            <p className="text-sm text-slate-500">
+              Fill in the key details and download a completed Mutual
+              Non-Disclosure Agreement as a PDF.
+            </p>
+          </div>
+          <Link
+            href="/login"
+            className="shrink-0 rounded-lg border border-slate-300 px-4 py-2 text-sm font-semibold text-slate-700 transition hover:bg-slate-50"
+          >
+            Sign in
+          </Link>
         </div>
       </header>
 
