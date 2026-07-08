@@ -1,7 +1,7 @@
 # PL-4 — Build foundation of V1 product
 
 **Type:** Technical foundation
-**Status:** To Do
+**Status:** Done
 
 ## Summary
 
