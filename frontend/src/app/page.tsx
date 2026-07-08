@@ -3,12 +3,13 @@
 import { useState } from "react";
 import Link from "next/link";
 import { DEFAULT_NDA, NdaData } from "@/lib/nda";
-import { NdaForm } from "@/components/NdaForm";
+import { NdaChat } from "@/components/NdaChat";
 import { NdaPreview } from "@/components/NdaPreview";
 import { DownloadPdfButton } from "@/components/DownloadPdfButton";
 
 export default function Home() {
   const [data, setData] = useState<NdaData>(DEFAULT_NDA);
+  const [complete, setComplete] = useState(false);
 
   return (
     <main className="min-h-screen bg-slate-100">
@@ -18,12 +19,10 @@ export default function Home() {
             <p className="text-xs font-bold uppercase tracking-widest text-indigo-700">
               pre-legal
             </p>
-            <h1 className="text-2xl font-bold text-slate-900">
-              Mutual NDA Creator
-            </h1>
+            <h1 className="text-2xl font-bold text-slate-900">Mutual NDA Creator</h1>
             <p className="text-sm text-slate-500">
-              Fill in the key details and download a completed Mutual
-              Non-Disclosure Agreement as a PDF.
+              Chat with the assistant to draft your Mutual Non-Disclosure
+              Agreement, then download it as a PDF.
             </p>
           </div>
           <Link
@@ -36,20 +35,18 @@ export default function Home() {
       </header>
 
       <div className="mx-auto grid max-w-7xl grid-cols-1 gap-8 px-6 py-8 lg:grid-cols-2">
-        <section aria-label="NDA details form">
-          <div className="mb-4 flex items-center justify-between">
-            <h2 className="text-lg font-semibold text-slate-800">Details</h2>
-            <DownloadPdfButton data={data} />
-          </div>
-          <div className="rounded-xl border border-slate-200 bg-white p-6 shadow-sm">
-            <NdaForm data={data} onChange={setData} />
-          </div>
+        <section aria-label="Assistant chat">
+          <h2 className="mb-4 text-lg font-semibold text-slate-800">Assistant</h2>
+          <NdaChat onFieldsChange={setData} onComplete={setComplete} />
         </section>
 
         <section aria-label="Live document preview">
-          <h2 className="mb-4 text-lg font-semibold text-slate-800">Preview</h2>
+          <div className="mb-4 flex items-center justify-between">
+            <h2 className="text-lg font-semibold text-slate-800">Preview</h2>
+            {complete && <DownloadPdfButton data={data} />}
+          </div>
           <div className="rounded-xl border border-slate-200 bg-slate-50 p-4 shadow-inner">
-            <div className="max-h-[80vh] overflow-y-auto rounded-lg">
+            <div className="max-h-[70vh] overflow-y-auto rounded-lg">
               <NdaPreview data={data} />
             </div>
           </div>
