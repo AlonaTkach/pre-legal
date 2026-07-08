@@ -1,7 +1,7 @@
 # PL-2 — Create a dataset of legal document templates
 
 **Type:** Data curation (one-time task)
-**Status:** To Do
+**Status:** Done
 
 ## Summary
 
