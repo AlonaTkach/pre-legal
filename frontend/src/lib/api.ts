@@ -2,28 +2,14 @@ import { DEFAULT_NDA, NdaData } from "./nda";
 
 export type ChatMessage = { role: "user" | "assistant"; content: string };
 
-export type NdaApiFields = {
-  purpose?: string | null;
-  effective_date?: string | null;
-  mnda_term_years?: number | null;
-  confidentiality_term_years?: number | null;
-  governing_law?: string | null;
-  jurisdiction?: string | null;
-  party1_company?: string | null;
-  party1_name?: string | null;
-  party1_title?: string | null;
-  party1_notice?: string | null;
-  party2_company?: string | null;
-  party2_name?: string | null;
-  party2_title?: string | null;
-  party2_notice?: string | null;
-};
-
 export type ChatResult = {
   reply: string;
-  fields: NdaApiFields;
+  document_type: string | null;
+  fields: Record<string, string>;
   complete: boolean;
 };
+
+export type TemplateDoc = { id: string; name: string; markdown: string };
 
 // Same-origin in Docker (backend serves the frontend). For `npm run dev`, set
 // NEXT_PUBLIC_API_BASE=http://localhost:8000.
@@ -39,29 +25,42 @@ export async function sendChat(messages: ChatMessage[]): Promise<ChatResult> {
   return res.json();
 }
 
-const years = (n: number | null | undefined) =>
-  n === null || n === undefined ? "" : String(n);
+export async function fetchTemplate(id: string): Promise<TemplateDoc> {
+  const res = await fetch(`${API_BASE}/api/template/${id}`);
+  if (!res.ok) throw new Error(`Template request failed: ${res.status}`);
+  return res.json();
+}
 
-export function apiFieldsToNdaData(f: NdaApiFields): NdaData {
+// Map the mutual-NDA field keys the assistant returns onto the structured
+// NdaData used by the polished NDA renderer.
+export function ndaDataFromFields(f: Record<string, string>): NdaData {
+  const get = (k: string) => f[k] ?? "";
   return {
     ...DEFAULT_NDA,
-    purpose: f.purpose ?? "",
-    effectiveDate: f.effective_date ?? "",
-    mndaTermYears: years(f.mnda_term_years),
-    confidentialityTermYears: years(f.confidentiality_term_years),
-    governingLaw: f.governing_law ?? "",
-    jurisdiction: f.jurisdiction ?? "",
+    purpose: get("purpose"),
+    effectiveDate: get("effective_date"),
+    mndaTermYears: get("mnda_term_years"),
+    confidentialityTermYears: get("confidentiality_term_years"),
+    governingLaw: get("governing_law"),
+    jurisdiction: get("jurisdiction"),
     party1: {
-      company: f.party1_company ?? "",
-      name: f.party1_name ?? "",
-      title: f.party1_title ?? "",
-      noticeAddress: f.party1_notice ?? "",
+      company: get("party1_company"),
+      name: get("party1_name"),
+      title: get("party1_title"),
+      noticeAddress: get("party1_notice"),
     },
     party2: {
-      company: f.party2_company ?? "",
-      name: f.party2_name ?? "",
-      title: f.party2_title ?? "",
-      noticeAddress: f.party2_notice ?? "",
+      company: get("party2_company"),
+      name: get("party2_name"),
+      title: get("party2_title"),
+      noticeAddress: get("party2_notice"),
     },
   };
+}
+
+// Turn a snake_case field key into a readable label, e.g. party1_company ->
+// "Party1 company".
+export function humanizeKey(key: string): string {
+  const s = key.replace(/_/g, " ").trim();
+  return s.charAt(0).toUpperCase() + s.slice(1);
 }

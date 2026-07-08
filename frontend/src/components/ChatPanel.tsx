@@ -1,18 +1,16 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { NdaData } from "@/lib/nda";
-import { apiFieldsToNdaData, ChatMessage, sendChat } from "@/lib/api";
+import { ChatMessage, ChatResult, sendChat } from "@/lib/api";
 
 const GREETING =
-  "Hi! I'll help you draft a mutual NDA. To start — what's the purpose of this agreement?";
+  "Hi! I'll help you draft a legal agreement. What type of document do you need? (For example, a mutual NDA.)";
 
 type Props = {
-  onFieldsChange: (data: NdaData) => void;
-  onComplete: (complete: boolean) => void;
+  onResult: (result: ChatResult) => void;
 };
 
-export function NdaChat({ onFieldsChange, onComplete }: Props) {
+export function ChatPanel({ onResult }: Props) {
   const [messages, setMessages] = useState<ChatMessage[]>([
     { role: "assistant", content: GREETING },
   ]);
@@ -35,8 +33,7 @@ export function NdaChat({ onFieldsChange, onComplete }: Props) {
     try {
       const result = await sendChat(next);
       setMessages([...next, { role: "assistant", content: result.reply }]);
-      onFieldsChange(apiFieldsToNdaData(result.fields));
-      onComplete(result.complete);
+      onResult(result);
     } catch {
       setError("Something went wrong reaching the assistant. Please try again.");
       setMessages(next);
