@@ -1,0 +1,92 @@
+{
+  "name": "pre-legal template catalog",
+  "description": "Index of legal agreement templates sourced from Common Paper (https://github.com/CommonPaper), free to use and modify under CC BY 4.0.",
+  "source": "https://github.com/CommonPaper",
+  "license": {
+    "name": "Creative Commons Attribution 4.0 International",
+    "spdx_id": "CC-BY-4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "templates": [
+    {
+      "id": "mutual-nda",
+      "name": "Mutual Non-Disclosure Agreement",
+      "files": {
+        "standard_terms": "templates/mutual-nda.md",
+        "cover_page": "templates/mutual-nda-coverpage.md"
+      },
+      "description": "Reciprocal NDA allowing each party to disclose confidential information for a stated purpose. Cover page captures purpose, effective date, term, confidentiality period, governing law and party details.",
+      "source": "https://github.com/CommonPaper/Mutual-NDA"
+    },
+    {
+      "id": "design-partner-agreement",
+      "name": "Design Partner Agreement",
+      "files": { "standard_terms": "templates/design-partner-agreement.md" },
+      "description": "Agreement for collaborating with an early customer (design partner) on developing and testing a product.",
+      "source": "https://github.com/CommonPaper/Design-Partner-Agreement"
+    },
+    {
+      "id": "ai-addendum",
+      "name": "AI Addendum",
+      "files": { "standard_terms": "templates/ai-addendum.md" },
+      "description": "Addendum covering the use of artificial intelligence and machine learning in a customer agreement.",
+      "source": "https://github.com/CommonPaper/AI-Addendum"
+    },
+    {
+      "id": "pilot-agreement",
+      "name": "Pilot Agreement",
+      "files": { "standard_terms": "templates/pilot-agreement.md" },
+      "description": "Short-term trial agreement letting a customer evaluate a product or service before a full commitment.",
+      "source": "https://github.com/CommonPaper/Pilot-Agreement"
+    },
+    {
+      "id": "professional-services-agreement",
+      "name": "Professional Services Agreement",
+      "files": { "standard_terms": "templates/professional-services-agreement.md" },
+      "description": "Terms for providing professional or consulting services, including statements of work.",
+      "source": "https://github.com/CommonPaper/PSA"
+    },
+    {
+      "id": "partnership-agreement",
+      "name": "Partnership Agreement",
+      "files": { "standard_terms": "templates/partnership-agreement.md" },
+      "description": "Agreement establishing a referral, reseller or other commercial partnership between two companies.",
+      "source": "https://github.com/CommonPaper/Partnership-Agreement"
+    },
+    {
+      "id": "business-associate-agreement",
+      "name": "Business Associate Agreement",
+      "files": { "standard_terms": "templates/business-associate-agreement.md" },
+      "description": "HIPAA business associate agreement governing the handling of protected health information.",
+      "source": "https://github.com/CommonPaper/BAA"
+    },
+    {
+      "id": "service-level-agreement",
+      "name": "Service Level Agreement",
+      "files": { "standard_terms": "templates/service-level-agreement.md" },
+      "description": "SLA defining uptime commitments, support response times and remedies for a service.",
+      "source": "https://github.com/CommonPaper/SLA"
+    },
+    {
+      "id": "cloud-service-agreement",
+      "name": "Cloud Service Agreement",
+      "files": { "standard_terms": "templates/cloud-service-agreement.md" },
+      "description": "Master terms for providing a cloud/SaaS product to a customer.",
+      "source": "https://github.com/CommonPaper/CSA"
+    },
+    {
+      "id": "software-license-agreement",
+      "name": "Software License Agreement",
+      "files": { "standard_terms": "templates/software-license-agreement.md" },
+      "description": "Terms for licensing software to a customer, including scope, restrictions and support.",
+      "source": "https://github.com/CommonPaper/Software-License-Agreement"
+    },
+    {
+      "id": "data-processing-agreement",
+      "name": "Data Processing Agreement",
+      "files": { "standard_terms": "templates/data-processing-agreement.md" },
+      "description": "DPA governing the processing of personal data between controller and processor (GDPR-oriented).",
+      "source": "https://github.com/CommonPaper/DPA"
+    }
+  ]
+}

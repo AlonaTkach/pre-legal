@@ -1,0 +1,19 @@
+Legal document templates in this directory
+===========================================
+
+The legal agreement templates in this directory are sourced from Common Paper
+(https://github.com/CommonPaper) and are free to use and modify under the
+Creative Commons Attribution 4.0 International license (CC BY 4.0):
+
+    https://creativecommons.org/licenses/by/4.0/
+
+Attribution
+-----------
+Templates provided by Common Paper (https://commonpaper.com). Each individual
+template retains the CC BY 4.0 attribution notice contained within its file.
+
+Note
+----
+These templates are provided for pre-drafting purposes only and do not
+constitute legal advice. Have any final agreement reviewed by a qualified
+attorney before use.
