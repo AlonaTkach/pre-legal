@@ -1,7 +1,7 @@
 # PL-5 — Add AI chat (still just mutual NDA)
 
 **Type:** Feature
-**Status:** To Do
+**Status:** Done
 
 ## Summary
 
