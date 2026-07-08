@@ -1,7 +1,7 @@
 # PL-6 — Support all legal document types
 
 **Type:** Feature
-**Status:** To Do
+**Status:** Done
 
 ## Summary
 
