@@ -5,7 +5,9 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
-from .catalog import load_catalog
+from fastapi import HTTPException
+
+from .catalog import find_template, load_catalog, read_template_markdown
 from .chat import ChatResult, Message, run_chat
 from .config import STATIC_DIR
 from .db import init_db
@@ -42,6 +44,15 @@ def health() -> dict:
 @app.get("/api/catalog")
 def catalog() -> dict:
     return load_catalog()
+
+
+@app.get("/api/template/{template_id}")
+def template(template_id: str) -> dict:
+    meta = find_template(template_id)
+    markdown = read_template_markdown(template_id)
+    if not meta or markdown is None:
+        raise HTTPException(status_code=404, detail="Template not found")
+    return {"id": meta["id"], "name": meta["name"], "markdown": markdown}
 
 
 @app.post("/api/auth/login")

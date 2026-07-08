@@ -1,8 +1,7 @@
 import { useState } from "react";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { DEFAULT_NDA, NdaData } from "@/lib/nda";
-import { NdaChat } from "./NdaChat";
+import { ChatPanel } from "./ChatPanel";
 import * as api from "@/lib/api";
 
 jest.mock("@/lib/api", () => {
@@ -13,49 +12,54 @@ jest.mock("@/lib/api", () => {
 const mockedSendChat = api.sendChat as jest.MockedFunction<typeof api.sendChat>;
 
 function Harness() {
-  const [data, setData] = useState<NdaData>(DEFAULT_NDA);
-  const [complete, setComplete] = useState(false);
+  const [result, setResult] = useState<api.ChatResult | null>(null);
   return (
     <div>
-      <NdaChat onFieldsChange={setData} onComplete={setComplete} />
-      <output data-testid="gov">{data.governingLaw}</output>
-      <output data-testid="complete">{complete ? "yes" : "no"}</output>
+      <ChatPanel onResult={setResult} />
+      <output data-testid="doctype">{result?.document_type ?? ""}</output>
+      <output data-testid="gov">{result?.fields.governing_law ?? ""}</output>
+      <output data-testid="complete">{result?.complete ? "yes" : "no"}</output>
     </div>
   );
 }
 
-describe("NdaChat", () => {
+describe("ChatPanel", () => {
   beforeEach(() => mockedSendChat.mockReset());
 
   it("shows the greeting on mount", () => {
     render(<Harness />);
-    expect(screen.getByText(/help you draft a mutual NDA/i)).toBeInTheDocument();
+    expect(
+      screen.getByText(/help you draft a legal agreement/i),
+    ).toBeInTheDocument();
   });
 
-  it("sends a message, shows the reply, and lifts extracted fields", async () => {
+  it("sends a message, shows the reply, and lifts the chat result", async () => {
     mockedSendChat.mockResolvedValue({
       reply: "Got it. What's the effective date?",
+      document_type: "mutual-nda",
       fields: { governing_law: "New York" },
       complete: false,
     });
     const user = userEvent.setup();
     render(<Harness />);
 
-    await user.type(screen.getByLabelText("Message"), "Evaluate a partnership");
+    await user.type(screen.getByLabelText("Message"), "I need a mutual NDA");
     await user.click(screen.getByRole("button", { name: /send/i }));
 
     await waitFor(() =>
       expect(screen.getByText(/what's the effective date/i)).toBeInTheDocument(),
     );
     expect(mockedSendChat).toHaveBeenCalledTimes(1);
+    expect(screen.getByTestId("doctype")).toHaveTextContent("mutual-nda");
     expect(screen.getByTestId("gov")).toHaveTextContent("New York");
     expect(screen.getByTestId("complete")).toHaveTextContent("no");
   });
 
   it("marks complete when the backend says so", async () => {
     mockedSendChat.mockResolvedValue({
-      reply: "Your MNDA is ready to download.",
-      fields: { governing_law: "New York" },
+      reply: "Your document is ready to download.",
+      document_type: "mutual-nda",
+      fields: {},
       complete: true,
     });
     const user = userEvent.setup();
