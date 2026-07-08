@@ -1,7 +1,7 @@
 # PL-7 — Support multiple users and final polish
 
 **Type:** Feature
-**Status:** To Do
+**Status:** Done
 
 ## Summary
 
