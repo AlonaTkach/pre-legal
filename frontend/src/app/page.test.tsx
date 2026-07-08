@@ -12,12 +12,20 @@ jest.mock("@/components/DocumentPdfDocument", () => ({
 }));
 jest.mock("@/lib/api", () => {
   const actual = jest.requireActual("@/lib/api");
-  return { ...actual, sendChat: jest.fn(), fetchTemplate: jest.fn() };
+  return {
+    ...actual,
+    sendChat: jest.fn(),
+    fetchTemplate: jest.fn(),
+    saveDocument: jest.fn(),
+  };
 });
 
 const mockedSendChat = api.sendChat as jest.MockedFunction<typeof api.sendChat>;
 const mockedFetchTemplate = api.fetchTemplate as jest.MockedFunction<
   typeof api.fetchTemplate
+>;
+const mockedSaveDocument = api.saveDocument as jest.MockedFunction<
+  typeof api.saveDocument
 >;
 
 async function answer(text: string) {
@@ -30,6 +38,8 @@ describe("Home page", () => {
   beforeEach(() => {
     mockedSendChat.mockReset();
     mockedFetchTemplate.mockReset();
+    mockedSaveDocument.mockReset();
+    localStorage.clear();
   });
 
   it("shows the assistant chat and the preview side by side", () => {
@@ -64,6 +74,46 @@ describe("Home page", () => {
       screen.getByRole("button", { name: /download pdf/i }),
     ).toBeInTheDocument();
     expect(mockedFetchTemplate).not.toHaveBeenCalled();
+  });
+
+  it("shows 'Sign in to save' for anonymous users on a completed document", async () => {
+    mockedSendChat.mockResolvedValue({
+      reply: "Ready.",
+      document_type: "mutual-nda",
+      fields: { governing_law: "New York" },
+      complete: true,
+    });
+    render(<Home />);
+    await answer("finalize");
+
+    expect(await screen.findByText(/sign in to save/i)).toBeInTheDocument();
+  });
+
+  it("lets a signed-in user save a completed document", async () => {
+    localStorage.setItem("prelegal_token", "tok123");
+    localStorage.setItem("prelegal_email", "a@b.com");
+    mockedSendChat.mockResolvedValue({
+      reply: "Ready.",
+      document_type: "mutual-nda",
+      fields: { governing_law: "New York" },
+      complete: true,
+    });
+    mockedSaveDocument.mockResolvedValue({ id: 1 });
+    const user = userEvent.setup();
+    render(<Home />);
+    await answer("finalize");
+
+    const saveBtn = await screen.findByRole("button", { name: /^save$/i });
+    await user.click(saveBtn);
+
+    await waitFor(() =>
+      expect(mockedSaveDocument).toHaveBeenCalledWith(
+        "tok123",
+        expect.any(String),
+        "mutual-nda",
+        { governing_law: "New York" },
+      ),
+    );
   });
 
   it("fetches and renders a generic document template", async () => {
