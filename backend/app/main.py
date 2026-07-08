@@ -6,6 +6,7 @@ from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from .catalog import load_catalog
+from .chat import ChatResult, Message, run_chat
 from .config import STATIC_DIR
 from .db import init_db
 
@@ -47,6 +48,15 @@ def catalog() -> dict:
 def login(_: LoginRequest) -> dict:
     # PL-4: placeholder only. No authentication yet (real auth in PL-7).
     return {"ok": True, "placeholder": True}
+
+
+class ChatRequest(BaseModel):
+    messages: list[Message]
+
+
+@app.post("/api/chat")
+def chat(req: ChatRequest) -> ChatResult:
+    return run_chat(req.messages)
 
 
 # Serve the built frontend (Next.js static export) if present. Mounted last so
